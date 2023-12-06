@@ -16,10 +16,12 @@ class Cat{
         this.jumpPower = 0
         this.speed = 5
         
+        
     }
 
     //display function
     display(){
+        
         image(this.graphic,this.x,this.y,this.s,this.s)
         //rect(this.x,this.y + 45,100,10)
     }
@@ -44,10 +46,12 @@ class Cat{
             ellipse(this.middleX+15,this.sensorTop + 15,5,5)
             if(isEdge(id) === false && isMarket(id2) === false 
             && isAnimalShop(id2) === false && isFarm(id2) === false
-            && isStudyRoom(id2) === false){
+            && isStudyRoom(id2) === false && isStudyRoomDoor(id2) === false ){
                 this.graphic = catRun
                 this.y -= this.speed
             }
+
+            
         }
 
         if(keyIsDown(DOWN_ARROW)){
@@ -95,6 +99,57 @@ class Cat{
 
     
     }
+
+    move2(){
+        this.graphic = catIdle
+        this.sensorLeft = this.x - 2
+        this.sensorRight = this.x + TILESIZE + 2
+        this.sensorTop = this.y-2;
+        this.sensorBottom = this.y+TILESIZE+2;
+        this.middleX = this.x+TILESIZE/2;
+        this.middleY = this.y+TILESIZE/2;
+
+        if(keyIsDown(UP_ARROW)){
+            fill("pink")
+            ellipse(this.middleX+15,this.sensorTop + 15,5,5)
+                this.graphic = catRun
+                this.y -= this.speed
+            
+
+            
+        }
+
+        if(keyIsDown(DOWN_ARROW)){
+            fill("pink")
+            ellipse(this.middleX + 15,this.sensorBottom + 35,5,5)
+                this.graphic = catRun
+                this.y += this.speed
+            
+        
+        }
+
+        if(keyIsDown(LEFT_ARROW)){
+            fill("pink")
+            ellipse(this.sensorLeft,this.middleY + 20,5,5)
+            
+            this.graphic = catRun
+            this.x -= this.speed
+        }
+              
+        
+        if(keyIsDown(RIGHT_ARROW)){
+
+            fill("pink")
+            ellipse(this.sensorRight+30,this.middleY+20,5,5)
+           
+            this.graphic = catRun
+            this.x += this.speed
+            
+        }
+
+    }
+
+
 
     // jump(){
 
