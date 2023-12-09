@@ -5,6 +5,7 @@ let catIdle
 let catRun
 let catJump
 let cat
+let cat2
 
 
 let gameState = 1;
@@ -127,6 +128,9 @@ let level_study = [
 
 ]
 
+// 1044  1193 1938 1939 1926
+// 
+
 
 function preload(){
 
@@ -166,13 +170,19 @@ function draw(){
             gameState = 1
         }
 
+
     }
 
     if(gameState === 1){
         drawLevel(level_study)
+        
        
         cat2.display()
         cat2.move2()
+        let isInFocusArea = cat2.isInStudyArea()
+        
+    
+        
 
     }
 
@@ -199,7 +209,7 @@ function drawTile(tileID,screenX,screenY){
 
 
 //detecting collison
-
+/* game state 0 */
 function isEdge(id){
     
     if(id === 1036 || id  === 1185 || id === 1038 || id === 889){
@@ -247,6 +257,24 @@ function isStudyRoomDoor(id){
     return false
 }
 
+/* game state 3 Study */
+function isWalkable(id){
+    // 1044  1193 1938 1939 1926
+    if( id === 1044 || id == 1193 || id == 1938 || id == 1939 || id == 1926 ){
+        return true
+    }
+    return false
+}
+
+//study area
+function isStudyArea(id){
+    if(id === 1939){
+        return true
+    }
+    return false
+
+}
+
 
 
 
@@ -271,31 +299,7 @@ function transition(x,y,level){
 }
 
 
- // if(keyIsPressed && key == 'j' && cat.jumpMode === false){
-        //     cat.graphic = catJump
-        //     cat.jumpMode = true
-        //     cat.jumpPower = -5;
-        // }
 
-        // if(cat.jumpMode === true){
-        //     cat.graphic = catJump
-        //     cat.y += cat.jumpPower
-        //     cat.jumpPower += gravity
-        //     ground = 400
-
-        //     if(cat.y + 5 >= ground ){
-        //         cat.jumpPower = 0
-        //         cat.jumpMode = false
-        //         cat.y = ground - cat.s
-
-               
-        //     }
-        //     fill("red")
-        //     ellipse(cat.x, cat.y,20,20)
-        // }
-    
-        // fill("pink")
-        // rect(0,floorY,width,height)
 
 
 
