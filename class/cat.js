@@ -133,10 +133,15 @@ class Cat{
             fill("pink")
             let id = getTile(this.sensorLeft, this.middleY + 20, level_study)
             ellipse(this.sensorLeft,this.middleY + 20,5,5)
-            if(isWalkable(id)){
+            // if(isWalkable(id)){
+            //     this.graphic = catRun
+            //     this.x -= this.speed
+            // }
+            if(!isWater(id)){
                 this.graphic = catRun
                 this.x -= this.speed
             }
+            
            
         }
               
@@ -150,8 +155,11 @@ class Cat{
             //     this.graphic = catRun
             //     this.x += this.speed
             // }
-            this.graphic = catRun
-            this.x += this.speed
+            if(!isWater(id)){
+                this.graphic = catRun
+                this.x += this.speed
+            }
+            
             if (this.x > width){
                 gameState = 0
             }

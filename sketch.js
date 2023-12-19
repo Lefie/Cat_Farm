@@ -345,6 +345,13 @@ function isWalkable(id){
     return false
 }
 
+function isWater(id){
+    if (id === 1936){
+        return true
+    }
+    return false
+}
+
 //study area
 function isStudyArea(id){
     if(id === 1939){
