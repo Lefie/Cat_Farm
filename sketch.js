@@ -8,18 +8,27 @@ let cat
 let cat2
 
 
+
 let gameState = 1;
 
-let floorY = 460
+let focusPoints = 0
 
-let ground
+//study room variables
+let inp
+let btn
+let p
+let value
+let ogValue
+let pressed = false
+let finished = false
+let winMsgDisplayTime = 10
+
 
 /*
 0 : default 
 1 : market
 2 : shop 
 3 : study 
-
 */
 
 
@@ -148,7 +157,17 @@ function setup(){
     
     cat = new Cat(320, 200,50,50)
     cat2 = new Cat(0,210,50,50)
+    inp = createInput('')
+    btn = createButton('Submit')
+    p = createP("Enter how long you'd like to study(mins)")
+
+
+    inp.hide()
+    btn.hide()
+    p.hide()
     noStroke()
+
+   
    
 
 }
@@ -164,26 +183,86 @@ function draw(){
         cat.display()
         cat.move() 
         
-
         let room = transition(cat.middleX + 15, cat.sensorTop + 15, level2)
         if( room === "studyRoom" ){
             gameState = 1
         }
-
-
     }
 
     if(gameState === 1){
         drawLevel(level_study)
+        text("focus points: "+focusPoints,30,30)
         
-       
         cat2.display()
         cat2.move2()
-        let isInFocusArea = cat2.isInStudyArea()
-        
-    
-        
 
+        let isInFocusArea = cat2.isInStudyArea()
+        if(isInFocusArea){
+            inp.show()
+            btn.show()
+            p.show()
+            textSize(20)
+           
+            p.position(width/2+200,200)
+            inp.position(width/2 + 270,250)
+            btn.position(width/2 + 300,290)
+            
+            btn.mousePressed(()=>{
+                submitMins()
+                
+                pressed = true
+            })
+    
+            
+            if(pressed){
+                inp.hide()
+                btn.hide()
+                p.hide()
+                fill("white")
+                rectMode(CENTER)
+                rect(400,280,50,50)
+                cat2.display()
+                cat2.move()
+                fill("black")
+                text("start",380,280)
+                
+                
+                //text("distance "+dist(cat2.x, cat2.y,400,280),400,150)
+                if(dist(cat2.x, cat2.y,400,280) < 45 ){
+                    fill("white")
+                    rect(400,80,100,80)
+                    fill("black")
+                    
+                    text(floor(value/60) + " : ",370,90)
+                    text(value%60,400,90)
+                
+                    //timer begins
+                    if(frameCount % 60 === 0 && value > 0){
+                        value -= 1
+                    }
+                   
+                }
+
+                if(value === 0){
+                    pressed = false
+                    finished = true
+                }
+            }
+
+            if (finished == true){
+                focusPoints += map(ogValue,1,60,10,100)
+                finished = false
+            }
+
+            
+        
+        }else{
+            inp.hide()
+            btn.hide()
+            p.hide()
+        }
+        
+        
     }
 
     
@@ -297,6 +376,15 @@ function transition(x,y,level){
     return "invalid"
 
 }
+
+function submitMins(){
+    value = int(inp.value()) * 60
+    ogValue = inp.value()
+    inp.value("")
+
+}
+
+
 
 
 

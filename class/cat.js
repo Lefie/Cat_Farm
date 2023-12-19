@@ -1,9 +1,5 @@
 
 
-const gravity = 0.2;
-
-
-
 
 class Cat{
     constructor(x,y,s){
@@ -150,9 +146,14 @@ class Cat{
             let id = getTile(this.sensorRight + 30, this.middleY + 20, level_study)
             ellipse(this.sensorRight+30,this.middleY+20,5,5)
 
-            if(isWalkable(id)){
-                this.graphic = catRun
-                this.x += this.speed
+            // if(isWalkable(id)){
+            //     this.graphic = catRun
+            //     this.x += this.speed
+            // }
+            this.graphic = catRun
+            this.x += this.speed
+            if (this.x > width){
+                gameState = 0
             }
         }
 
