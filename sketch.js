@@ -1,3 +1,10 @@
+/*
+0 : default 
+1 : market
+2 : shop 
+3 : study 
+*/
+
 
 let farm
 
@@ -6,12 +13,13 @@ let catRun
 let catJump
 let cat
 let cat2
+let cat3
 
 
 
-let gameState = 1;
+let gameState = 0;
 
-let focusPoints = 0
+let focusPoints = 100
 
 //study room variables
 let inp
@@ -21,15 +29,42 @@ let value
 let ogValue
 let pressed = false
 let finished = false
-let winMsgDisplayTime = 10
+let hasStarted = false
+let success = false
+
+//animals 
+let bunny
+let chicken
+let cow
+let goat
+let pig
+let sheep
+
+let spriteBunny
+let spriteChicken
+let spriteCow
+let spriteGoat
+let spritePig
+let spriteSheep
+let count = 0
 
 
-/*
-0 : default 
-1 : market
-2 : shop 
-3 : study 
-*/
+//market
+let marketImg
+let isClicked = false
+let bunnyIsClicked = false
+let chickenIsClicked = false
+let cowIsClicked = false
+let goatIsClicked = false
+let pigIsClicked = false
+let sheepIsClicked  = false
+let price // bunny and chicken use this
+let price2 //cow and goat
+let price3 // pig and sheep
+
+let isMouseClicked = false;
+
+let myFarmAnimals = []
 
 
 const TILESIZE = 16
@@ -82,22 +117,22 @@ let level2 = [
 [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,3855,4150,4150,794,795,796,797,-1,-1,3855,-1,-1,-1,-1,-1,-1],
 [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,3855,-1,-1,942,943,944,945,-1,-1,3855,-1,-1,-1,-1,-1,-1],
 [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,3855,-1,-1,-1,-1,-1,-1,-1,-1,3855,-1,-1,-1,-1,-1,-1],
-[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,3855,3855,3855,-1,-1,-1,-1,3855,3855,3855,-1,-1,-1,-1,-1,-1],
+[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,3852,3853,3852,3853,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,3855,3855,3855,-1,-1,-1,-1,3855,3855,3855,-1,-1,-1,-1,-1,-1],
+[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,4000,4001,4000,4001,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
+[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,4148,4149,4148,4149,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
+[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,4316,4316,4316,4316,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
+[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,4169,4169,4169,4169,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
 [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
-[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
-[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
-[-1,-1,-1,-1,-1,-1,4296,4297,4297,4297,4297,4297,4297,4297,4298,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
-[-1,-1,-1,-1,-1,-1,4444,1337,1337,1337,1337,1337,1337,1337,4446,-1,-1,-1,-1,-1,-1,-1,-1,-1,4741,4740,4740,4740,4740,4740,4740,4740,4741,4741,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
-[-1,-1,-1,-1,-1,-1,4444,1337,1337,1337,1337,1337,1337,1337,4446,-1,-1,-1,-1,-1,-1,-1,-1,-1,4888,-1,-1,5679,5680,5681,5682,5683,-1,4890,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
-[-1,-1,-1,-1,-1,-1,4444,1337,1337,1337,1337,1337,1337,1337,4446,-1,-1,-1,-1,-1,-1,-1,-1,-1,4888,-1,5826,5827,5828,5829,5830,5831,-1,4890,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
-[-1,-1,-1,-1,-1,-1,4444,1337,1337,1337,1337,1337,1337,1337,4446,-1,-1,-1,-1,-1,-1,-1,-1,-1,4888,-1,-1,5975,5976,5977,5978,5979,-1,4890,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
-[-1,-1,-1,-1,-1,-1,4444,1337,1337,1337,1337,1337,1337,1337,4446,-1,-1,-1,-1,-1,-1,-1,-1,-1,4888,-1,6122,6123,6124,6125,6126,6127,-1,4890,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
-[-1,-1,-1,-1,-1,-1,4444,1337,1337,1337,1337,1337,1337,1337,4446,-1,-1,-1,-1,-1,-1,-1,-1,-1,4888,-1,6270,6271,6272,6273,6274,6275,-1,4890,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
-[-1,-1,-1,-1,-1,-1,4444,1337,1337,1337,1337,1337,1337,1337,4446,-1,-1,-1,-1,-1,-1,-1,-1,-1,4888,-1,-1,-1,-1,-1,-1,-1,-1,4890,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
-[-1,-1,-1,-1,-1,-1,4592,4593,4593,-1,-1,-1,4593,4593,4594,-1,-1,-1,-1,-1,-1,-1,-1,-1,5039,5039,5039,-1,-1,-1,-1,5039,5039,5039,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
-[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
-[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
-[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
+[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,3852,3853,3852,3853,3852,3853,-1,-1,-1,-1,-1,-1,-1,-1,-1],
+[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,4000,4001,4000,4001,4000,4001,-1,-1,-1,-1,-1,-1,-1,-1,-1],
+[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,4148,4149,4148,4149,4148,4149,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
+[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
+[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
+[-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
+[-1,-1,-1,-1,-1,-1,-1,-1,4169,4169,4169,4169,4169,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,4314,4314,4314,4314,4314,4314,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
+[-1,-1,-1,-1,-1,-1,-1,-1,4169,-1,-1,-1,4169,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,4314,-1,-1,-1,-1,4314,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
+[-1,-1,-1,-1,-1,-1,-1,-1,4169,-1,-1,-1,4169,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,4314,-1,-1,-1,-1,4314,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
+[-1,-1,-1,-1,-1,-1,-1,-1,4169,-1,-1,-1,4169,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,4314,-1,-1,-1,-1,4314,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
 [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1],
 [-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
 
@@ -147,6 +182,14 @@ function preload(){
     catIdle = loadImage("/imgs/catset_assets/catset_gifs/cat05_gifs/cat05_idle_blink_8fps.gif")
     catRun = loadImage("imgs/catset_assets/catset_gifs/cat05_gifs/cat05_run_12fps.gif")
     catJump = loadImage("imgs/catset_assets/catset_gifs/cat05_gifs/cat05_jump_12fps.gif")
+    bunny = loadImage("imgs/full version/animals/bunny_animations.png")
+    chicken = loadImage("imgs/full version/animals/chicken animation.png")
+    cow = loadImage("imgs/full version/animals/cow animation.png")
+    goat = loadImage("imgs/full version/animals/goat animation.png")
+    pig = loadImage("imgs/full version/animals/pig animation.png")
+    sheep = loadImage("imgs/full version/animals/sheep animation.png")
+    marketImg = loadImage("imgs/exported/market.png")
+
     
 }
 
@@ -157,26 +200,48 @@ function setup(){
     
     cat = new Cat(320, 200,50,50)
     cat2 = new Cat(0,210,50,50)
+    cat3 = new Cat(320,300,50,50)
+    spriteBunny = new Sprite(bunny)
+    spriteChicken = new Sprite(chicken)
+    spriteCow = new Sprite(cow)
+    spriteGoat = new Sprite(goat)
+    spritePig = new Sprite(pig)
+    spriteSheep = new Sprite(sheep)
+    price = new Price(150,150,"bunny")
+    price2 = new Price(150,150,"cow")
+    price3 = new Price(150,150,"pig")
+
     inp = createInput('')
     btn = createButton('Submit')
     p = createP("Enter how long you'd like to study(mins)")
-
 
     inp.hide()
     btn.hide()
     p.hide()
     noStroke()
 
-   
-   
-
 }
 
 function draw(){
     background(128)
     if(gameState === 0){
+        imageMode(CORNER)
         drawLevel(level1)
         drawLevel(level2)
+
+        for(let i = 0; i < myFarmAnimals.length; i++){
+            myFarmAnimals[i].moveRandomly();
+        }
+        textSize(20)
+       
+        // spriteBunny.moveRandomly()
+        // spriteChicken.moveRandomly()
+        // spriteCow.moveRandomly()
+        // spriteGoat.moveRandomly()
+        // spritePig.moveRandomly()
+        // spriteSheep.moveRandomly()
+
+        text("focus points: "+focusPoints,30,30)
         fill("white")
         ellipseMode(CENTER)
         //ellipse(cat.x + 25,cat.y + 30,30,30)
@@ -186,11 +251,19 @@ function draw(){
         let room = transition(cat.middleX + 15, cat.sensorTop + 15, level2)
         if( room === "studyRoom" ){
             gameState = 1
+            cat.x = 10
+        }
+
+        if(room === "marketPl"){
+            gameState = 2
+            cat.x = 10
         }
     }
 
     if(gameState === 1){
+        imageMode(CORNER)
         drawLevel(level_study)
+        textSize(15)
         text("focus points: "+focusPoints,30,30)
         
         cat2.display()
@@ -201,11 +274,11 @@ function draw(){
             inp.show()
             btn.show()
             p.show()
-            textSize(20)
+            textSize(15)
            
-            p.position(width/2+200,200)
-            inp.position(width/2 + 270,250)
-            btn.position(width/2 + 300,290)
+            p.position(width/2 + 100,200)
+            inp.position(width/2 + 150,250)
+            btn.position(width/2 + 180,290)
             
             btn.mousePressed(()=>{
                 submitMins()
@@ -224,6 +297,7 @@ function draw(){
                 cat2.display()
                 cat2.move()
                 fill("black")
+                textSize(15)
                 text("start",380,280)
                 
                 
@@ -232,6 +306,7 @@ function draw(){
                     fill("white")
                     rect(400,80,100,80)
                     fill("black")
+                    hasStarted = true
                     
                     text(floor(value/60) + " : ",370,90)
                     text(value%60,400,90)
@@ -241,17 +316,28 @@ function draw(){
                         value -= 1
                     }
                    
+                }else{
+                    if(hasStarted == true){
+                        text("study session has been broken.",400,150)
+                        pressed = false
+                        finished = true
+                        hasStarted = false
+
+                    }
                 }
 
                 if(value === 0){
                     pressed = false
                     finished = true
+                    hasStarted = false
+                    success = true;
                 }
             }
 
-            if (finished == true){
+            if (finished == true && success == true){
                 focusPoints += map(ogValue,1,60,10,100)
                 finished = false
+                success = false
             }
 
             
@@ -263,6 +349,159 @@ function draw(){
         }
         
         
+    }
+
+    if(gameState === 2){
+        imageMode(CORNER)
+        image(marketImg,0,0)
+        textSize(15)
+        text("focus points: "+focusPoints,30,30)
+      
+        
+        let bunnyObj = spriteBunny.display()
+        let cowObj = spriteCow.display()
+        let chickenObj = spriteChicken.display()
+        let goatObj = spriteGoat.display()
+        let pigObj = spritePig.display()
+        let sheepObj = spriteSheep.display()
+        image(bunnyObj[0][0],350,190,25,25)
+        image(chickenObj[0][0],380,190,25,25)
+        image(cowObj[0][0],410,190,25,25)
+        image(goatObj[0][0],350,230,25,25)
+        image(pigObj[0][0], 380,230,25,25)
+        image(sheepObj[0][0],410,230, 25,25)
+        
+        let bunnyDis = dist(mouseX,mouseY,350,190)
+        let chickenDis = dist(mouseX,mouseY,380,190)
+        let cowDis = dist(mouseX,mouseY,410,190) 
+        let goatDis = dist(mouseX,mouseY,350,230)
+        let pigDis = dist(mouseX,mouseY,380,230)
+        let sheepDis = dist(mouseX,mouseY,410,230)
+
+        //text("isClicked: " + isClicked, 50,50)
+        //text("bunny is Clicked: " + bunnyIsClicked, 50,70)
+
+        //bunny
+        if(bunnyDis < 25  && mouseIsPressed){
+            //text( bunnyDis, 230,30)
+            if(isClicked == false && bunnyIsClicked == false){
+                isClicked = true 
+                bunnyIsClicked = true
+            }
+        }
+
+        if(isClicked === true && bunnyIsClicked === true){
+            price.display()
+            price.btn()
+            //ellipse(price.x + 10,price.y + 10,10,10)
+            if(mouseIsPressed){
+               
+                if(dist(mouseX,mouseY,price.x + 10, price.y + 10) < 20){
+                    isClicked = false
+                    bunnyIsClicked = false
+                }
+            }
+        }
+
+        //process chicken
+        if(chickenDis < 25 && mouseIsPressed){
+            if(isClicked == false && chickenIsClicked == false){
+                isClicked = true 
+                chickenIsClicked = true
+            }
+
+        }
+
+        if(isClicked === true && chickenIsClicked === true){
+            price.display()
+            price.btn()
+            //ellipse(price.x + 10,price.y + 10,10,10)
+            if(mouseIsPressed){
+               
+                if(dist(mouseX,mouseY,price.x + 10, price.y + 10) < 20){
+                    isClicked = false
+                    chickenIsClicked = false
+                }
+            }
+        }
+
+        //process cow
+        if(cowDis < 25 && mouseIsPressed){
+            if(isClicked == false && cowIsClicked == false){
+                isClicked =  true
+                cowIsClicked = true
+            }
+
+        }
+
+        if(isClicked === true && cowIsClicked === true){
+            price2.display()
+            price2.btn()
+            if(mouseIsPressed){
+                if(dist(mouseX, mouseY, price2.x + 10, price2.y + 10 ) < 20){
+                    isClicked = false
+                    cowIsClicked = false
+                }
+            }
+        }
+
+        //process goat
+        if(goatDis < 25 && mouseIsPressed){
+            if(isClicked == false && goatIsClicked == false){
+                isClicked =  true
+                goatIsClicked = true
+            }
+        }
+
+        if(isClicked === true && goatIsClicked === true){
+            price2.display()
+            price2.btn()
+            if(mouseIsPressed){
+                if(dist(mouseX, mouseY, price2.x + 10, price2.y + 10 ) < 20){
+                    isClicked = false
+                    goatIsClicked = false
+                }
+            }
+        }
+
+        //process pig
+        if(pigDis < 25 && mouseIsPressed){
+            if(isClicked == false && pigIsClicked == false){
+                isClicked =  true
+                pigIsClicked = true
+            }
+        }
+
+        if(isClicked === true && pigIsClicked === true){
+            price3.display()
+            price3.btn()
+            if(mouseIsPressed){
+                if(dist(mouseX, mouseY, price3.x + 10, price3.y + 10 ) < 20){
+                    isClicked = false
+                    pigIsClicked = false
+                }
+            }
+        }
+
+         //process sheep
+         if(sheepDis < 25 && mouseIsPressed){
+            if(isClicked == false && sheepIsClicked == false){
+                isClicked =  true
+                sheepIsClicked = true
+            }
+        }
+
+        if(isClicked === true && sheepIsClicked === true){
+            price3.display()
+            price3.btn()
+            if(mouseIsPressed){
+                if(dist(mouseX, mouseY, price3.x + 10, price3.y + 10 ) < 20){
+                    isClicked = false
+                    sheepIsClicked = false
+                }
+            }
+        }
+
     }
 
     
@@ -336,6 +575,15 @@ function isStudyRoomDoor(id){
     return false
 }
 
+function isMarketDoor(id){
+    //9830,9831
+    if(id === 9830 || id === 9831){
+        return true
+    }
+    return false
+
+}
+
 /* game state 3 Study */
 function isWalkable(id){
     // 1044  1193 1938 1939 1926
@@ -361,9 +609,6 @@ function isStudyArea(id){
 
 }
 
-
-
-
 // given an x and y position, determine what tile is here
 // do this by first converting x & y position into array positions
 // then peek into the array at that position to identify the tile ID
@@ -380,6 +625,9 @@ function transition(x,y,level){
     if(isStudyRoomDoor(id2)){
         return "studyRoom"
     }
+    if(isMarketDoor(id2)){
+        return "marketPl"
+    }
     return "invalid"
 
 }
@@ -391,8 +639,79 @@ function submitMins(){
 
 }
 
+function mousePressed() {
+    isMouseClicked = true;
+    
+    
+  }
+  
+function mouseReleased() {
+    if (isMouseClicked && bunnyIsClicked) {
+        if(focusPoints >= price.points){
+            if(dist(mouseX,mouseY,price.x + 10, price.y + 75) < 30){
+               myFarmAnimals.push(new Sprite(bunny))
+                focusPoints -= price.points
+            }
+        }
+    }
 
+    if (isMouseClicked && chickenIsClicked) {
+        if(focusPoints >= price.points){
+            if(dist(mouseX,mouseY,price.x + 10, price.y + 75) < 30){
+                myFarmAnimals.push(new Sprite(chicken))
+                focusPoints -= price.points
+            }
+        }
+    }
 
+    if (isMouseClicked && cowIsClicked ){
+        if(focusPoints >= price2.points){
+            if(dist(mouseX, mouseY, price2.x + 10, price2.y + 75) < 30){
+                myFarmAnimals.push(new Sprite(cow))
+                focusPoints -= price2.points
+            }
+        }
+    }
+
+    if (isMouseClicked && goatIsClicked){
+        if(focusPoints >= price2.points){
+            if(dist(mouseX, mouseY, price2.x + 10, price2.y + 75) < 30){
+                myFarmAnimals.push(new Sprite(goat))
+                focusPoints -= price2.points
+            }
+        }
+    }
+
+    if( isMouseClicked && pigIsClicked){
+        if(focusPoints >= price3.points){
+            if(dist(mouseX, mouseY, price3.x + 10, price3.y + 75) < 30){
+                myFarmAnimals.push(new Sprite(pig))
+                focusPoints -= price3.points
+            }
+        }
+    }
+
+    if( isMouseClicked && sheepIsClicked){
+        if(focusPoints >= price3.points){
+            if(dist(mouseX, mouseY, price3.x + 10, price3.y + 75) < 30){
+                myFarmAnimals.push(new Sprite(sheep))
+                focusPoints -= price3.points
+            }
+        }
+    }
+
+    
+    isMouseClicked = false;
+}
+  
+function keyPressed(){
+    if(gameState == 2){
+        if(key === "q"){
+            gameState = 0
+            cat.x = 10
+        }
+    }
+}
 
 
 
