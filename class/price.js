@@ -20,7 +20,7 @@ class Price{
 
     display(){
         //text(this.type,150,50)
-        
+        rectMode(CORNER)
         fill("white")
         rect(this.x,this.y,150,100) // 150,150
         fill("black")

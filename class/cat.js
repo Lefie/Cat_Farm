@@ -10,7 +10,7 @@ class Cat{
         this.graphic = catIdle; //default graphic matching status
         this.jumpMode = false
         this.jumpPower = 0
-        this.speed = 5
+        this.speed = 3
         
         
     }
@@ -19,7 +19,7 @@ class Cat{
     display(){
         
         image(this.graphic,this.x,this.y,this.s,this.s)
-        //rect(this.x,this.y + 45,100,10)
+      
     }
 
     //move
@@ -38,8 +38,8 @@ class Cat{
         if(keyIsDown(UP_ARROW)){
             let id = getTile(this.middleX + 15, this.sensorTop + 15,level1)
             let id2 = getTile(this.middleX + 15,this.sensorTop + 15,level2)
-            fill("pink")
-            ellipse(this.middleX+15,this.sensorTop + 15,5,5)
+            //fill("pink")
+            //ellipse(this.middleX+15,this.sensorTop + 15,5,5)
             if(isEdge(id) === false && isMarket(id2) === false 
             && isStudyRoom(id2) === false && isStudyRoomDoor(id2) === false && isMarketDoor(id2) === false ){
                 this.graphic = catRun
@@ -52,8 +52,8 @@ class Cat{
         if(keyIsDown(DOWN_ARROW)){
             let id = getTile(this.middleX + 15, this.sensorBottom + 35,level1)
             let id2 = getTile(this.middleX + 15, this.sensorBottom + 10,level2)
-            fill("pink")
-            ellipse(this.middleX + 15,this.sensorBottom + 35,5,5)
+            // fill("pink")
+            // ellipse(this.middleX + 15,this.sensorBottom + 35,5,5)
             console.log("key is down",id)
             if(isEdge(id) === false && isMarket(id2) === false 
             && isStudyRoom(id2) === false){
@@ -66,8 +66,8 @@ class Cat{
         if(keyIsDown(LEFT_ARROW)){
             let id = getTile(this.sensorLeft, this.middleY + 20,level1)
             let id2 = getTile(this.sensorLeft, this.middleY + 20, level2)
-            fill("pink")
-            ellipse(this.sensorLeft,this.middleY + 20,5,5)
+            // fill("pink")
+            // ellipse(this.sensorLeft,this.middleY + 20,5,5)
             if(isEdge(id) === false && isMarket(id2) === false 
             && isStudyRoom(id2) === false ){
                 this.graphic = catRun
@@ -80,8 +80,8 @@ class Cat{
         if(keyIsDown(RIGHT_ARROW)){
             let id = getTile(this.sensorRight+30, this.middleY+20,level1)
             let id2 = getTile(this.sensorRight+30,this.middleY + 20, level2 )
-            fill("pink")
-            ellipse(this.sensorRight+30,this.middleY+20,5,5)
+            // fill("pink")
+            // ellipse(this.sensorRight+30,this.middleY+20,5,5)
             if(isEdge(id) === false && isMarket(id2) === false 
             && isStudyRoom(id2) === false){
                 this.graphic = catRun
@@ -103,9 +103,9 @@ class Cat{
 
 
         if(keyIsDown(UP_ARROW)){
-            fill("pink")
+            // fill("pink")
             let id = getTile(this.middleX + 15, this.sensorTop + 15,level_study)
-            ellipse(this.middleX+15,this.sensorTop + 15,5,5)
+            // ellipse(this.middleX+15,this.sensorTop + 15,5,5)
             if(isWalkable(id)){
                 this.graphic = catRun
                 this.y -= this.speed
@@ -115,9 +115,9 @@ class Cat{
         }
 
         if(keyIsDown(DOWN_ARROW)){
-            fill("pink")
+            // fill("pink")
             let id = getTile(this.middleX + 15, this.sensorBottom + 35,level_study)
-            ellipse(this.middleX + 15,this.sensorBottom + 35,5,5)
+            // ellipse(this.middleX + 15,this.sensorBottom + 35,5,5)
             if(isWalkable(id)){
                 this.graphic = catRun
                 this.y += this.speed
@@ -126,9 +126,9 @@ class Cat{
         }
 
         if(keyIsDown(LEFT_ARROW)){
-            fill("pink")
+            //fill("pink")
             let id = getTile(this.sensorLeft, this.middleY + 20, level_study)
-            ellipse(this.sensorLeft,this.middleY + 20,5,5)
+            //ellipse(this.sensorLeft,this.middleY + 20,5,5)
           
             if(!isWater(id)){
                 this.graphic = catRun
@@ -140,9 +140,9 @@ class Cat{
               
         
         if(keyIsDown(RIGHT_ARROW)){
-            fill("pink")
+            //fill("pink")
             let id = getTile(this.sensorRight + 30, this.middleY + 20, level_study)
-            ellipse(this.sensorRight+30,this.middleY+20,5,5)
+            //ellipse(this.sensorRight+30,this.middleY+20,5,5)
 
         
             if(!isWater(id)){
@@ -176,13 +176,13 @@ class Cat{
         let idRight = getTile(this.sensorRight+30,this.middleY+20,level_study);
 
     
-        ellipse(this.middleX+15,this.sensorTop + 15,5,5)
+        // ellipse(this.middleX+15,this.sensorTop + 15,5,5)
 
-        ellipse(this.middleX + 15,this.sensorBottom + 35,5,5)
+        // ellipse(this.middleX + 15,this.sensorBottom + 35,5,5)
 
-        ellipse(this.sensorLeft,this.middleY + 20,5,5)
+        // ellipse(this.sensorLeft,this.middleY + 20,5,5)
 
-        ellipse(this.sensorRight+30,this.middleY+20,5,5)
+        // ellipse(this.sensorRight+30,this.middleY+20,5,5)
 
         if(idTop == 1939 && idBottom == 1939 && idLeft == 1939 && idRight == 1939 ){
             return true

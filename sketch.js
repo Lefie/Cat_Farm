@@ -5,7 +5,20 @@
 3 : study 
 */
 
+//sound
+let bgMusic
+let door
+let bg
+let bunny_noise
+let chicken_noise
+let cow_noise
+let goat_noise
+let pig_noise
+let sheep_noise
 
+
+
+//
 let farm
 
 let catIdle
@@ -172,14 +185,13 @@ let level_study = [
 
 ]
 
-// 1044  1193 1938 1939 1926
-// 
 
 
 function preload(){
 
-    farm = loadImage("/imgs/full version/global.png") 
-    catIdle = loadImage("/imgs/catset_assets/catset_gifs/cat05_gifs/cat05_idle_blink_8fps.gif")
+    //farm = loadImage("/catFarm/imgs/full version/global.png")
+    farm = loadImage("imgs/full version/global.png") 
+    catIdle = loadImage("imgs/catset_assets/catset_gifs/cat05_gifs/cat05_idle_blink_8fps.gif")
     catRun = loadImage("imgs/catset_assets/catset_gifs/cat05_gifs/cat05_run_12fps.gif")
     catJump = loadImage("imgs/catset_assets/catset_gifs/cat05_gifs/cat05_jump_12fps.gif")
     bunny = loadImage("imgs/full version/animals/bunny_animations.png")
@@ -189,14 +201,20 @@ function preload(){
     pig = loadImage("imgs/full version/animals/pig animation.png")
     sheep = loadImage("imgs/full version/animals/sheep animation.png")
     marketImg = loadImage("imgs/exported/market.png")
-
-    
-}
-
+    bgMusic = loadSound("sound/bg.mp3")
+    door = loadSound("sound/door.mp3")
+    bunny_noise = loadSound("sound/bunny.mp3")
+    chicken_noise = loadSound("sound/chicken.mp3")
+    cow_noise = loadSound("sound/cow.mp3")
+    goat_noise = loadSound("sound/goat.mp3")
+    pig_noise = loadSound("sound/pig.mp3")
+    sheep_noise = loadSound("sound/sheep.mp3")
+  }
 
 function setup(){
 
-    createCanvas(800,480)
+    let c = createCanvas(800,480)
+    c.parent("#container")
     
     cat = new Cat(320, 200,50,50)
     cat2 = new Cat(0,210,50,50)
@@ -219,12 +237,17 @@ function setup(){
     btn.hide()
     p.hide()
     noStroke()
+    bgMusic.play()
+   
+    
+   
 
 }
 
 function draw(){
     background(128)
     if(gameState === 0){
+        
         imageMode(CORNER)
         drawLevel(level1)
         drawLevel(level2)
@@ -232,7 +255,7 @@ function draw(){
         for(let i = 0; i < myFarmAnimals.length; i++){
             myFarmAnimals[i].moveRandomly();
         }
-        textSize(20)
+        textSize(15)
        
         // spriteBunny.moveRandomly()
         // spriteChicken.moveRandomly()
@@ -250,11 +273,13 @@ function draw(){
         
         let room = transition(cat.middleX + 15, cat.sensorTop + 15, level2)
         if( room === "studyRoom" ){
+            door.play()
             gameState = 1
             cat.x = 10
         }
 
         if(room === "marketPl"){
+            door.play()
             gameState = 2
             cat.x = 10
         }
@@ -276,9 +301,9 @@ function draw(){
             p.show()
             textSize(15)
            
-            p.position(width/2 + 100,200)
-            inp.position(width/2 + 150,250)
-            btn.position(width/2 + 180,290)
+            p.position(width/2 + 200,200)
+            inp.position(width/2 + 300,250)
+            btn.position(width/2 + 360,290)
             
             btn.mousePressed(()=>{
                 submitMins()
@@ -340,8 +365,6 @@ function draw(){
                 success = false
             }
 
-            
-        
         }else{
             inp.hide()
             btn.hide()
@@ -352,6 +375,8 @@ function draw(){
     }
 
     if(gameState === 2){
+        
+        changeMusic()
         imageMode(CORNER)
         image(marketImg,0,0)
         textSize(15)
@@ -384,6 +409,7 @@ function draw(){
         //bunny
         if(bunnyDis < 25  && mouseIsPressed){
             //text( bunnyDis, 230,30)
+           bunny_noise.play()
             if(isClicked == false && bunnyIsClicked == false){
                 isClicked = true 
                 bunnyIsClicked = true
@@ -405,6 +431,7 @@ function draw(){
 
         //process chicken
         if(chickenDis < 25 && mouseIsPressed){
+            chicken_noise.play()
             if(isClicked == false && chickenIsClicked == false){
                 isClicked = true 
                 chickenIsClicked = true
@@ -427,6 +454,7 @@ function draw(){
 
         //process cow
         if(cowDis < 25 && mouseIsPressed){
+            cow_noise.play()
             if(isClicked == false && cowIsClicked == false){
                 isClicked =  true
                 cowIsClicked = true
@@ -447,7 +475,9 @@ function draw(){
 
         //process goat
         if(goatDis < 25 && mouseIsPressed){
+            goat_noise.play()
             if(isClicked == false && goatIsClicked == false){
+                
                 isClicked =  true
                 goatIsClicked = true
             }
@@ -466,6 +496,7 @@ function draw(){
 
         //process pig
         if(pigDis < 25 && mouseIsPressed){
+            pig_noise.play()
             if(isClicked == false && pigIsClicked == false){
                 isClicked =  true
                 pigIsClicked = true
@@ -485,6 +516,7 @@ function draw(){
 
          //process sheep
          if(sheepDis < 25 && mouseIsPressed){
+            sheep_noise.play()
             if(isClicked == false && sheepIsClicked == false){
                 isClicked =  true
                 sheepIsClicked = true
@@ -600,13 +632,13 @@ function isWater(id){
     return false
 }
 
+
 //study area
 function isStudyArea(id){
     if(id === 1939){
         return true
     }
     return false
-
 }
 
 // given an x and y position, determine what tile is here
@@ -632,6 +664,14 @@ function transition(x,y,level){
 
 }
 
+function changeMusic(){
+    if(gameState === 2){
+        
+    }
+}
+
+
+
 function submitMins(){
     value = int(inp.value()) * 60
     ogValue = inp.value()
@@ -641,8 +681,7 @@ function submitMins(){
 
 function mousePressed() {
     isMouseClicked = true;
-    
-    
+
   }
   
 function mouseReleased() {
